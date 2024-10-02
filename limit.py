@@ -1,41 +1,50 @@
 import sympy as sp
 
-def find_limit(func_str, var_str, point):
-    """
-    Mencari limit kanan dan limit kiri dari suatu fungsi pada titik tertentu.
+def hitung_limit_kanan_kiri():
+    # Meminta input beberapa fungsi dari pengguna, dipisahkan dengan koma
+    fungsi_str = input("Masukkan fungsi-fungsi dengan kondisi, dipisahkan dengan koma (contoh: (x-2)/(x+3) jika x<1, x**2 + 3*x jika x>=1): ")
+    
+    # Meminta input titik di mana limit akan dihitung
+    titik_str = input("Masukkan titik untuk menghitung limit: ")
+    
+    # Mendefinisikan variabel
+    x = sp.Symbol('x')
+    
+    # Memisahkan fungsi berdasarkan koma
+    fungsi_kondisi_list = fungsi_str.split(',')
+    
+    # Daftar untuk menyimpan kondisi fungsi
+    kondisi_pieces = []
+    
+    # Mengubah input string titik menjadi angka (float/int)
+    titik = float(titik_str)
+    
+    # Loop untuk setiap fungsi dengan kondisi
+    for fungsi_kondisi in fungsi_kondisi_list:
+        # Memisahkan fungsi dan kondisinya
+        if "jika" in fungsi_kondisi:
+            fungsi_part, kondisi_part = fungsi_kondisi.split("jika")
+            fungsi = sp.sympify(fungsi_part.strip())  # Mengubah fungsi menjadi simbolik
+            kondisi = sp.sympify(kondisi_part.strip())  # Mengubah kondisi menjadi simbolik
+            kondisi_pieces.append((fungsi, kondisi))  # Menambahkan fungsi dan kondisinya ke daftar
+        else:
+            # Jika tidak ada kondisi, anggap fungsi berlaku secara umum
+            fungsi = sp.sympify(fungsi_kondisi.strip())
+            kondisi_pieces.append((fungsi, True))  # Kondisi 'True' berarti berlaku umum
+    
+    # Menggunakan Piecewise untuk mendefinisikan fungsi bagian
+    fungsi_piecewise = sp.Piecewise(*kondisi_pieces)
+    
+    # Menghitung limit kanan (x mendekati titik dari kanan)
+    limit_kanan = sp.limit(fungsi_piecewise, x, titik, dir='+')
+    
+    # Menghitung limit kiri (x mendekati titik dari kiri)
+    limit_kiri = sp.limit(fungsi_piecewise, x, titik, dir='-')
+    
+    # Menampilkan hasil limit kanan dan kiri
+    print(f"\nFungsi dengan kondisi: {fungsi_piecewise}")
+    print(f"Limit kanan dari f(x) ketika x mendekati {titik} adalah {limit_kanan}")
+    print(f"Limit kiri dari f(x) ketika x mendekati {titik} adalah {limit_kiri}")
 
-    Parameters:
-    func_str : str
-        Fungsi yang ingin dicari limitnya (dalam bentuk string).
-    var_str : str
-        Variabel independen dalam fungsi (misal: 'x').
-    point : float or int
-        Titik di mana limit ingin dihitung.
-
-    Returns:
-    tuple : (limit kanan, limit kiri)
-        Hasil limit kanan dan limit kiri dari fungsi pada titik yang diberikan.
-    """
-    # Definisikan variabel dan fungsi dari input pengguna
-    var = sp.symbols(var_str)
-    func = sp.sympify(func_str)  # Konversi string fungsi menjadi ekspresi sympy
-
-    # Cari limit kanan (dir='+') dan limit kiri (dir='-')
-    limit_right = sp.limit(func, var, point, dir='+')
-    limit_left = sp.limit(func, var, point, dir='-')
-
-    return limit_right, limit_left
-
-# Contoh penggunaan
-if __name__ == "__main__":
-    # Input dari pengguna
-    func_str = input("Masukkan fungsi (misal: 1/x atau x**2): ")
-    var_str = input("Masukkan variabel (misal: x): ")
-    point = float(input("Masukkan titik di mana limit ingin dihitung (misal: 0): "))
-
-    # Mencari limit kanan dan kiri
-    limit_kanan, limit_kiri = find_limit(func_str, var_str, point)
-
-    # Menampilkan hasil
-    print(f"Limit kanan dari {func_str} saat {var_str} mendekati {point}: {limit_kanan}")
-    print(f"Limit kiri dari {func_str} saat {var_str} mendekati {point}: {limit_kiri}")
+# Memanggil fungsi untuk pengguna
+hitung_limit_kanan_kiri()
