@@ -42,7 +42,6 @@ def main():
             print("Kuadran hanya bisa 1-4.")
             return
 
-        # Sesuaikan sudut berdasarkan kuadran
         penyesuaian_sudut = penyesualian_sudut_dengan_kuadran (sudut, kuadran)
 
         if penyesuaian_sudut is None:
@@ -60,7 +59,7 @@ def main():
         print(f"sec: {result['sec']}")
         print(f"csc: {result['csc']}")
 
-    except ValueError:
+    except:
         print("Input tidak valid, pastikan Anda memasukkan angka.")
 
 main()
